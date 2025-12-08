@@ -312,10 +312,10 @@ def run_process(input_dir, atlas_path, out_root, dataset_id, config):
 
     print("=== PIPELINE STARTED ===")
 
-    run_robex(input_dir, robex_dir)
-    run_ants(robex_dir, ants_dir, atlas_path)
-    rename_after_ants(ants_dir)
-    cleanup_intermediate(ants_dir, keep_registered=True)
+    #run_robex(input_dir, robex_dir)
+    #run_ants(robex_dir, ants_dir, atlas_path)
+    #rename_after_ants(ants_dir)
+    #cleanup_intermediate(ants_dir, keep_registered=True)
     run_nnunet(ants_dir, pred_dir, dataset_id, config)
 
     print("\n=== PIPELINE SUCCESSFULLY COMPLETED ===")
