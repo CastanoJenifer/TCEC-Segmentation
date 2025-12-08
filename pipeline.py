@@ -6,24 +6,24 @@ import subprocess
 ALLOWED_EXTENSIONS = {'nii.gz'}
 
 """
-Ejecuta un comando del sistema operativo y maneja su output/errores.
+Execute an operating system command and handle its output/errors.
 
-Parámetros:
+Parameters:
 cmd : list
-Lista de strings que representa el comando a ejecutar y sus argumentos.
+List of strings representing the command to execute and its arguments.
 
-Retorna:
+Returns:
 subprocess.CompletedProcess
-Objeto con los resultados de la ejecución que incluye:
-- returncode: Código de retorno (0 = éxito)
-- stdout: Salida estándar del comando como string
-- stderr: Salida de error del comando como string
+Object containing the execution results, which includes:
+- returncode: Return code (0 = success)
+- stdout: Standard output of the command as a string
+- stderr: Standard error output of the command as a string
 
-Ejemplo:
-resultado = run_cmd(['echo', 'Hola mundo'])
-[CMD] echo Hola mundo
+Example:
+result = run_cmd(['echo', 'Hello world'])
+[CMD] echo Hello world
 
-Hola mundo
+Hello world
 """
 def run_cmd(cmd):
     print(f"\n[CMD] {' '.join(cmd)}\n")
@@ -43,20 +43,20 @@ def run_cmd(cmd):
 
 
 """
-Extrae la extensión del nombre de archivo y comprueba si está en la lista de extensiones permitidas definida en ALLOWED_EXTENSIONS.
+Extract the file extension and check if it is in the list of allowed extensions defined in ALLOWED_EXTENSIONS.
 
-Parámetros:
+Parameters:
 file : str
-Nombre completo del archivo (ej: "documento.pdf", "imagen.png").
+Full name of the file (e.g., "document.pdf", "image.png").
 
-Retorna:
+Returns:
 bool
-True si la extensión del archivo está en ALLOWED_EXTENSIONS.
-False si la extensión no está permitida o el archivo no tiene extensión.
+True if the file extension is in ALLOWED_EXTENSIONS.
+False if the extension is not allowed or the file has no extension.
 
-Ejemplos:
+Examples:
 ALLOWED_EXTENSIONS = {'nii.gz'}
-allowed_file("sujeto.nii.gz")
+allowed_file("subject.nii.gz")
 True
 """
 def allowed_file(file):
@@ -65,20 +65,19 @@ def allowed_file(file):
 
 
 """
-Esta función comprueba que el directorio especificado contenga archivos y que todos tengan la extensión correcta (.nii.gz) para procesamiento.
+This function verifies that the specified directory contains files and that all files have the correct extension (.nii.gz) for processing.
 
-Parámetros:
+Parameters:
 input_dir : str
-Ruta al directorio que contiene las imágenes a verificar.
+Path to the directory containing the images to verify.
 
-Retorna:
-La función no retorna ningún valor, solo valida los archivos.
+Returns:
+The function does not return any value, it only validates the files.
 
-Lanza:
+Raises:
 RuntimeError
-En dos casos:
-    1. Si no se encuentran archivos en el directorio especificado.
-    2. Si algún archivo no tiene la extensión .nii.gz.
+1. If no files are found in the specified directory.
+2. If any file does not have the .nii.gz extension.
 """
 def verify_inputs(input_dir):
     print("=== Checking input images ===")
@@ -99,17 +98,17 @@ def verify_inputs(input_dir):
 
 
 """
-Esta función ejecuta el script de ROBEX sobre todas las imágenes .nii.gz en el directorio de entrada, guardando los resultados en el directorio de salida especificado.
+This function executes the ROBEX script on all .nii.gz images in the input directory, saving the results in the specified output directory.
 
-Parámetros:
+Parameters:
 input_dir : str
-Directorio que contiene las imágenes .nii.gz de entrada a procesar.
+Directory containing the input .nii.gz images to be processed.
 
 robex_dir : str
-Directorio donde se guardarán las imágenes procesadas por ROBEX. Se crea automáticamente si no existe.
+Directory where the ROBEX-processed images will be saved. It is created automatically if it does not exist.
 
-Retorna:
-La función no retorna valores, procesa las imágenes y las guarda en el directorio de salida.
+Returns:
+The function does not return any values; it processes the images and saves them in the output directory.
 """
 def run_robex(input_dir, robex_dir):
     print("=== Running ROBEX ===")
@@ -132,20 +131,20 @@ def run_robex(input_dir, robex_dir):
 
 
 """
-Esta función realiza el registro no lineal de imágenes cerebrales .nii.gz  contra un atlas de referencia usando el script antsRegistrationSyN.sh.
+This function performs nonlinear registration of .nii.gz brain images to a reference atlas using the antsRegistrationSyN.sh script.
 
-Parámetros:
+Parameters:
 input_dir : str
-Directorio que contiene las imágenes .nii.gz a registrar.
+Directory containing the .nii.gz images to be registered.
 
 ants_dir : str
-Directorio donde se guardarán los resultados del registro ANTs. Se crea automáticamente si no existe.
+Directory where the ANTs registration results will be saved. It is created automatically if it does not exist.
 
 atlas_path : str
-Ruta al archivo del atlas de referencia (.nii.gz) que se usará como objetivo para el registro.
+Path to the reference atlas file (.nii.gz) to be used as the target for registration.
 
-Retorna:
-La función no retorna valores, genera archivos de salida de ANTs en el directorio especificado.  
+Returns:
+The function does not return any values; it generates ANTs output files in the specified directory.
 """
 def run_ants(input_dir, ants_dir, atlas_path):
     print("=== Running ANTs Registration ===")
@@ -177,15 +176,15 @@ def run_ants(input_dir, ants_dir, atlas_path):
 
 
 """
-Esta función busca las imágenes procesadas por ANTs (archivos *Warped.nii.gz) y las renombra con el sufijo '_0000.nii.gz' requerido por el framework nnUNet para segmentación.
+This function searches for images processed by ANTs (*Warped.nii.gz files) and renames them with the '_0000.nii.gz' suffix required by the nnUNet framework for segmentation.
 
-Parámetros:
+Parameters:
 ants_dir : str
-Directorio que contiene los archivos de salida generados por ANTs. Debe incluir archivos con el patrón *Warped.nii.gz.
+Directory containing the output files generated by ANTs. Must include files matching the pattern *Warped.nii.gz.
 
-Retorna:
+Returns:
 list
-Lista de objetos Path con las rutas de las imágenes renombradas. Cada elemento es la ruta completa a un archivo renombrado.
+List of Path objects containing the paths of the renamed images. Each element is the full path to a renamed file.
 """
 def rename_after_ants(ants_dir):
     print("=== Renaming registered images for nnUNet ===")
@@ -221,24 +220,23 @@ def rename_after_ants(ants_dir):
 
 
 """
-Esta función ejecuta el comando de predicción de nnUNet sobre las imágenes previamente procesadas y renombradas en el directorio de ANTs, generando máscaras de segmentación en el directorio de predicciones.
+This function executes the nnUNet prediction command on the previously processed and renamed images in the ANTs directory, generating segmentation masks in the predictions directory.
 
-Parámetros:
-
+Parameters:
 ants_dir : str
-Directorio que contiene las imágenes procesadas por ANTs y renombradas.
+Directory containing the ANTs-processed and renamed images.
 
 pred_dir : str
-Directorio donde se guardarán las predicciones/segmentaciones generadas por nnUNet. Se crea automáticamente si no existe.
+Directory where the nnUNet-generated predictions/segmentations will be saved. It is created automatically if it does not exist.
 
 dataset_id : int
-ID numérico del dataset de nnUNet que se usará para la predicción.
+Numeric ID of the nnUNet dataset to use for prediction.
 
 configuration : str
-Nombre de la configuración del modelo de nnUNet a utilizar: "3d_fullres".
+Name of the nnUNet model configuration to use: "3d_fullres".
 
-Retorna:
-La función no retorna valores, genera archivos de predicción en el directorio especificado.
+Returns:
+The function does not return any values; it generates prediction files in the specified directory.
 """
 def run_nnunet(ants_dir, pred_dir, dataset_id, configuration):
     print("=== Running nnUNetv2_predict ===")
@@ -258,18 +256,18 @@ def run_nnunet(ants_dir, pred_dir, dataset_id, configuration):
     
 
 """
-Esta función elimina los archivos temporales y de transformación generados por ANTs durante el proceso de registro, manteniendo solo las imágenes registradas finales.
+This function removes temporary and transformation files generated by ANTs during the registration process, keeping only the final registered images.
 
-Parámetros:
+Parameters:
 ants_dir : str
-Directorio que contiene los archivos generados por ANTs.
+Directory containing the files generated by ANTs.
 
-keep_registered : bool, opcional
-Si es True (por defecto), conserva las imágenes registradas finales (archivos que terminan en '_0000.nii.gz').
-Si es False, elimina TODOS los archivos en el directorio.
+keep_registered : bool, optional
+If True (default), keeps the final registered images (files ending with '_0000.nii.gz').
+If False, deletes ALL files in the directory.
 
-Retorna:
-La función no retorna valores, elimina archivos del sistema de archivos.
+Returns:
+The function does not return any values; it removes files from the filesystem.
 """    
 def cleanup_intermediate(ants_dir, keep_registered=True):
     print("\n === Cleaning intermediate files ===")
@@ -284,26 +282,26 @@ def cleanup_intermediate(ants_dir, keep_registered=True):
 
 
 """
-Esta función inicia todo el flujo de trabajo desde el preprocesamiento hasta la predicción, pasando por los siguientes pasos
+This function initiates the entire workflow from preprocessing to prediction.
 
-Parámetros:
+Parameters:
 input_dir : str
-Directorio que contiene las imágenes cerebrales de entrada
+Directory containing the input brain images.
 
 atlas_path : str
-Ruta completa al archivo del atlas de referencia (.nii.gz) que se usará como objetivo para el registro no lineal.
+Full path to the reference atlas file (.nii.gz) to be used as the target for nonlinear registration.
 
 out_root : str
-Directorio raíz donde se crearán todos los subdirectorios de salida.
+Root directory where all output subdirectories will be created.
 
 dataset_id : int
-ID numérico del dataset de nnUNet configurado (15).
+Numeric ID of the configured nnUNet dataset (15).
 
 config : str
-Configuración del modelo de nnUNet a utilizar para la segmentación: "3d_fullres".
+nnUNet model configuration to use for segmentation: "3d_fullres".
 
-Retorna:
-La función no retorna valores, ejecuta el pipeline completo y genera resultados en los directorios de salida.
+Returns:
+The function does not return any values; it executes the complete pipeline and generates results in the output directories.
 """
 def run_process(input_dir, atlas_path, out_root, dataset_id, config):
     robex_dir   = f"{out_root}/ROBEX"
@@ -312,17 +310,17 @@ def run_process(input_dir, atlas_path, out_root, dataset_id, config):
 
     print("=== PIPELINE STARTED ===")
 
-    #run_robex(input_dir, robex_dir)
-    #run_ants(robex_dir, ants_dir, atlas_path)
-    #rename_after_ants(ants_dir)
-    #cleanup_intermediate(ants_dir, keep_registered=True)
+    run_robex(input_dir, robex_dir)
+    run_ants(robex_dir, ants_dir, atlas_path)
+    rename_after_ants(ants_dir)
+    cleanup_intermediate(ants_dir, keep_registered=True)
     run_nnunet(ants_dir, pred_dir, dataset_id, config)
 
     print("\n=== PIPELINE SUCCESSFULLY COMPLETED ===")
 
 
 """
-Esta función define los parámetros fijos del pipeline y ejecuta el flujo completo de procesamiento de imágenes cerebrales.
+This function defines the fixed parameters of the pipeline and executes the complete brain image processing workflow.
 """
 def main():
     input_dir  = "/workspace/input"
