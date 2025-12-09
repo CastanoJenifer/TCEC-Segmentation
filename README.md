@@ -50,13 +50,11 @@ Once the Docker container is running, the entire pipeline executes automatically
 pipeline.py
 ```
 
---
 ## Usage Notes
 #### No manual commands are needed inside the container.
 #### All preprocessing and segmentation is automatic.
 #### Results are saved automatically in the output directory.
 
---
 # References
 
 ROBEX
