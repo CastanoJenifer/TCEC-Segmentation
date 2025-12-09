@@ -31,8 +31,8 @@ All processing is executed automatically when Docker starts.
 ```bash
 git clone <this-repository>
 ```
-#### 2. Download ROBEX(https://www.nitrc.org/projects/robex) for Linux.
-#### 3. Move the ROBEX folder. Place the downloaded folder named ROBEX inside the cloned repository.
+#### 2. Download [ROBEX](https://www.nitrc.org/projects/robex) for Linux.
+#### 3. Move the ROBEX folder. Place the downloaded ROBEX folder inside the cloned repository.
 #### 4. Give execution permissions.
 ```bash
 chmod +x ./ROBEX/ROBEX
